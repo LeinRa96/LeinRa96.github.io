@@ -19,35 +19,7 @@ function error(error) {
 
 function getStandings() {
   return new Promise(function (resolve, reject) {
-    if ('caches' in window) {
-        caches.match(`${base_url}competitions/2003/standings`).then(function(response) {
-          if (response) {
-            response.json().then(function (data) {
-              let standingsHTML = "";
-              data.standings[0].table.forEach(function(team) {
-                standingsHTML += `
-                  <div class="card">
-                    <a href="./standing.html?id=${team.team.id}">
-                        <div class="card-image waves-effect waves-block waves-light">
-                            <img src="${team.team.crestUrl}" alt="Logo ${team.team.name}"/>
-                        </div>
-                    </a>
-                    <div class="card-content">
-                        <span class="card-title truncate">${team.team.name}</span>
-                        <p>Matches played: ${team.playedGames}</p>
-                    </div>
-                  </div>
-                `;
-              });
-              // Sisipkan komponen card ke dalam elemen dengan id #content
-              document.getElementById("standings").innerHTML = standingsHTML;
-              resolve(data);
-            })
-          }
-        })
-    }
-
-  fetch(`${base_url}competitions/2003/standings`, {
+    fetch(`${base_url}competitions/2003/standings`, {
     headers: {
       "X-Auth-Token": '9f0de7ac9c3643218e09a26de1d081a3'
     }
@@ -85,29 +57,7 @@ function getTeamById() {
   return new Promise(function (resolve, reject) {
     let urlParams = new URLSearchParams(window.location.search);
     let idParam = urlParams.get("id");
-    if ("caches" in window) {
-      caches.match(`${base_url}teams/${idParam}`).then(function (response) {
-        if (response) {
-          response.json().then(function (data) {
-            let teamHTML = `
-            <div class="card">
-              <div class="card-image waves-effect waves-block waves-light">
-              <img src="${data.crestUrl}" alt="Logo ${data.result.name}"/>
-              </div>
-              <div class="card-content">
-                <span class="card-title">${data.result.name}</span>
-                ${snarkdown(data.result.playedGames)}
-              </div>
-            </div>
-          `;
-            // Sisipkan komponen card ke dalam elemen dengan id #content
-            document.getElementById("body-content").innerHTML = teamHTML;
-            resolve(data);
-        });
-      }
-    });
-  }
-  fetch(`${base_url}teams/${idParam}`, {
+    fetch(`${base_url}teams/${idParam}`, {
     headers: {
       "X-Auth-Token": '9f0de7ac9c3643218e09a26de1d081a3'
     }
